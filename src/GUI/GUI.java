@@ -16,7 +16,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
 import java.util.Map;
 
 public class GUI extends JFrame {
@@ -26,10 +25,11 @@ public class GUI extends JFrame {
     //ely 7nrsm 3liha
     JPanel panelComp;
 
-    public static final Color white_blue = new Color(204, 204, 204);
-    public static final  Color col = new Color(255, 153, 204);
-    public static final Color col2 = new Color(153, 204, 255 );
+    public static final Color GREY = new Color(204, 204, 204);
+    public static final  Color c = new Color(255, 153, 204);
+    public static final Color c2 = new Color(153, 204, 255 );
     public static final Color c3 = new Color(251, 251, 251);
+
     JButton addVertexBtn;
     JButton startBtn;
     JButton removeGraphBtn;
@@ -58,6 +58,7 @@ public class GUI extends JFrame {
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
         graphComponent.setConnectable(true);
         graphComponent.getViewport().setOpaque(true);
+
         graphComponent.getViewport().setBackground(c3);
         //setting dimension of the drawing board
         graph.getModel().setGeometry(graph.getDefaultParent(), new mxGeometry(990, 750, 0, 0));
@@ -94,7 +95,7 @@ public class GUI extends JFrame {
         mainPane.setBackground(c3);
         panelComp = new JPanel();
         panelComp.setLayout(null);
-        panelComp.setBackground(white_blue);
+        panelComp.setBackground(GREY);
         getContentPane().add(panelComp, BorderLayout.CENTER);
         getContentPane().add(mainPane, BorderLayout.EAST);
         //redo = new LinkedList<Object>();
@@ -103,7 +104,7 @@ public class GUI extends JFrame {
         //FOR ADDING A VERTEX
         addVertexBtn = new JButton("Add Node");
         addVertexBtn.setBounds(40,105,100, 40);
-        addVertexBtn.setBackground(col);
+        addVertexBtn.setBackground(c);
         addVertexBtn.setForeground(Color.gray);
         addVertexBtn.setFont(boldFont);
         addVertexBtn.setBorder(BorderFactory.createEmptyBorder());
@@ -116,7 +117,7 @@ public class GUI extends JFrame {
         //FOR REMOVING THE WHOLE GRAPH
         removeGraphBtn = new JButton("Clear");
         removeGraphBtn.setBounds(230,105,100,40);
-        removeGraphBtn.setBackground(col);
+        removeGraphBtn.setBackground(c);
         removeGraphBtn.setForeground(Color.gray);
         removeGraphBtn.setFont(boldFont);
         removeGraphBtn.setBorder(BorderFactory.createEmptyBorder());
@@ -132,7 +133,7 @@ public class GUI extends JFrame {
         //FOR STARTING CALCULATION
         startBtn = new JButton("Calculate");
         startBtn.setBounds(40,250,100,40);
-        startBtn.setBackground(col);
+        startBtn.setBackground(c);
         startBtn.setForeground(Color.gray);
         startBtn.setFont(boldFont);
         startBtn.setBorder(BorderFactory.createEmptyBorder());
@@ -147,9 +148,9 @@ public class GUI extends JFrame {
         boldFont = new Font("SansSerif", Font.BOLD, 14);
 
         //FOR EXIT BUTTON:
-        JButton exitBtn = new JButton("Exit ");
+        JButton exitBtn = new JButton("Exit");
         exitBtn.setBounds(360,33,80,30);
-        exitBtn.setBackground(col2);
+        exitBtn.setBackground(c2);
         exitBtn.setForeground(Color.BLACK);
         exitBtn.setFont(boldFont);
         exitBtn.setBorder(BorderFactory.createEmptyBorder());
@@ -162,7 +163,7 @@ public class GUI extends JFrame {
         //FOR warning label
         WarningLabel=new JLabel();
         WarningLabel.setBounds(30,260,350,50);
-        WarningLabel.setForeground(white_blue);
+        WarningLabel.setForeground(GREY);
         boldFont = new Font("SansSerif", Font.BOLD, 16);
         WarningLabel.setFont(boldFont);
         WarningLabel.setText("Make sure your entry is not wrong!");
@@ -233,7 +234,7 @@ public class GUI extends JFrame {
     }
     public void addvertex(){
         //30 30
-        Object v = graph.insertVertex(graph.getDefaultParent(), null,"Text" , 0.5, 0.5, 55, 55);
+        Object v = graph.insertVertex(graph.getDefaultParent(), null,"Text" , 30, 30, 55, 55);
         mxICell ver = (mxICell) v;
         setVertexStyle(ver, "#33ccff");
         resetGraph();
@@ -284,7 +285,7 @@ public class GUI extends JFrame {
                 return false;
             }
         }
-        WarningLabel.setForeground(white_blue);
+        WarningLabel.setForeground(GREY);
         return true;
     }
 
@@ -324,7 +325,7 @@ public class GUI extends JFrame {
             String name = (String) ver.getValue();
             if((txt.getText()).equals(name))
             {
-                WarningLabel.setForeground(white_blue);
+                WarningLabel.setForeground(GREY);
                 return true;
             }
         }
