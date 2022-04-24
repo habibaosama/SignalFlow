@@ -30,7 +30,7 @@ public class GUI extends JFrame {
     JPanel panel;
     GraphFlow finalGraph ;
     public static final Color white_blue = new Color(204, 204, 204);
-    public static final  Color col = new Color(255, 153, 204);
+    public static final  Color c = new Color(255, 153, 204);
     public static final Color c2 = new Color(153, 204, 255 );
     public static final Color c3 = new Color(251, 251, 251);
     JLabel WarningLabel;
@@ -104,7 +104,7 @@ public class GUI extends JFrame {
         //FOR ADDING A VERTEX
         JButton addBtn = new JButton("Add Node");
         addBtn.setBounds(40,105,100, 40);
-        addBtn.setBackground(col);
+        addBtn.setBackground(c);
         addBtn.setForeground(Color.gray);
         addBtn.setFont(boldFont);
         addBtn.setBorder(BorderFactory.createEmptyBorder());
@@ -117,7 +117,7 @@ public class GUI extends JFrame {
         //FOR REMOVING THE WHOLE GRAPH
         JButton clearBtn = new JButton("Clear");
         clearBtn.setBounds(230,105,100,40);
-        clearBtn.setBackground(col);
+        clearBtn.setBackground(c);
         clearBtn.setForeground(Color.gray);
         clearBtn.setFont(boldFont);
         clearBtn.setBorder(BorderFactory.createEmptyBorder());
@@ -133,7 +133,7 @@ public class GUI extends JFrame {
         //FOR STARTING CALCULATION
         JButton startBtn = new JButton("Calculate");
         startBtn.setBounds(40,250,100,40);
-        startBtn.setBackground(col);
+        startBtn.setBackground(c);
         startBtn.setForeground(Color.gray);
         startBtn.setFont(boldFont);
         startBtn.setBorder(BorderFactory.createEmptyBorder());
