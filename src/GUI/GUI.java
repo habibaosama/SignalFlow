@@ -141,6 +141,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e){
                 if(checkEdgesValue() && checkNodesNames() && textExists()){
                     startCalculation();
+                    //finalGraph.debugGraph();
                 }
             }
         });
@@ -234,7 +235,7 @@ public class GUI extends JFrame {
     }
     public void addvertex(){
         //30 30
-        Object v = graph.insertVertex(graph.getDefaultParent(), null,"Text" , 0.5, 0.5, 55, 55);
+        Object v = graph.insertVertex(graph.getDefaultParent(), null,"Name" , 30, 30, 55, 55);
         mxICell ver = (mxICell) v;
         setVertexStyle(ver, "#33ccff");
         resetGraph();

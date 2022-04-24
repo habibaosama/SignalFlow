@@ -12,7 +12,7 @@ public class Edge {
         this.source = source;
         this.destination = destination;
         this.weight = weight;
-        edgeId= generateUniqueId();
+        //edgeId= generateUniqueId();
     }
 
     public Vertex getSource() {
@@ -26,16 +26,16 @@ public class Edge {
     public int getWeight() {
         return weight;
     }
-    public Long getEdgeId() {
+    /*public Long getEdgeId() {
         return edgeId;
-    }
+    }*/
 
     ///Method generate id/////////////////
-    public static Long generateUniqueId() {
+  /*  public static Long generateUniqueId() {
         long val = -1;
         do {
             val = UUID.randomUUID().getMostSignificantBits();
         } while (val < 0);
         return val/1000;
-    }
+    }*/
 }

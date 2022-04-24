@@ -18,7 +18,7 @@ public class GraphFlow {
     }
     public void addEgde(Vertex source, Vertex destination, int weight) {
         Edge edge = new Edge(source, destination, weight);
-        Graphlist[source.getId()].addFirst(edge); //for directed graph
+        Graphlist[source.getId()].add(edge); //for directed graph
     }
 
     /* public void debugGraph() {
