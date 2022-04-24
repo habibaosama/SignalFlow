@@ -233,7 +233,6 @@ public class GUI extends JFrame {
         graph.refresh();
     }
     public void addvertex(){
-        //30 30
         Object v = graph.insertVertex(graph.getDefaultParent(), null,"Name" , 30, 30, 55, 55);
         mxICell ver = (mxICell) v;
         setVertexStyle(ver, "#33ccff");
@@ -246,7 +245,7 @@ public class GUI extends JFrame {
         targetStyle = mxStyleUtils.setStyle(targetStyle , mxConstants.STYLE_STROKECOLOR, "black" );
         targetStyle = mxStyleUtils.setStyle(targetStyle, mxConstants.STYLE_FILLCOLOR, colorstr);
         targetStyle = mxStyleUtils.setStyle(targetStyle, mxConstants.STYLE_FONTCOLOR, "black");
-        targetStyle = mxStyleUtils.setStyle(targetStyle, mxConstants.STYLE_FONTSIZE, "10");
+        targetStyle = mxStyleUtils.setStyle(targetStyle, mxConstants.STYLE_FONTSIZE, "12");
         targetStyle = mxStyleUtils.setStyle(targetStyle, mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
         vertex.setStyle(targetStyle);
     }
@@ -348,7 +347,7 @@ public class GUI extends JFrame {
             for (int j=i+1;j<list.length;j++){
                 String second =(String)((mxICell)list[j]).getValue();
                 if(first.equalsIgnoreCase(second)){
-                    WarningLabel.setForeground(new Color(225, 5, 108));
+                    WarningLabel.setForeground(Color.red);
                     return false;
                 }
             }
