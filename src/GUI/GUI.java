@@ -29,7 +29,7 @@ public class GUI extends JFrame {
     //ely 7nrsm 3liha
     JPanel panel;
     GraphFlow finalGraph ;
-    public static final Color white_blue = new Color(204, 204, 204);
+    public static final Color GREY = new Color(204, 204, 204);
     public static final  Color c = new Color(255, 153, 204);
     public static final Color c2 = new Color(153, 204, 255 );
     public static final Color c3 = new Color(251, 251, 251);
@@ -75,7 +75,6 @@ public class GUI extends JFrame {
                         edge.setValue("1");
                     }
                 }
-
         );
         //Sets the new label for a cell
         graph.addListener(mxEvent.LABEL_CHANGED, (sender, evt) -> {
@@ -94,7 +93,7 @@ public class GUI extends JFrame {
         main.setBackground(c3);
         panel = new JPanel();
         panel.setLayout(null);
-        panel.setBackground(white_blue);
+        panel.setBackground(GREY);
         getContentPane().add(panel, BorderLayout.CENTER);
         getContentPane().add(main, BorderLayout.EAST);
         //redo = new LinkedList<Object>();
@@ -139,7 +138,7 @@ public class GUI extends JFrame {
         startBtn.setBorder(BorderFactory.createEmptyBorder());
         startBtn.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                if(checkEdgesValue() && checkNodesNames() && textExists()){
+                if(checkEdgesValue() && isRedundantNode() && textExists()){
                     startCalculation();
                     //finalGraph.debugGraph();
                 }
@@ -164,7 +163,7 @@ public class GUI extends JFrame {
         //FOR warning label
         WarningLabel=new JLabel();
         WarningLabel.setBounds(30,260,350,50);
-        WarningLabel.setForeground(white_blue);
+        WarningLabel.setForeground(GREY);
         boldFont = new Font("SansSerif", Font.BOLD, 16);
         WarningLabel.setFont(boldFont);
         WarningLabel.setText("Make sure your entry is not wrong!");
@@ -317,29 +316,32 @@ public class GUI extends JFrame {
     public boolean checkEdgesValue(){
         Object[] list = graph.getChildEdges(graph.getDefaultParent());
         for(int i=0; i< list.length; i++){
-            if(!isInteger((String) graph.getModel().getValue(list[i]),10)){
-                WarningLabel.setForeground(new Color(225, 5, 108));
+            if(!checkInteger((String) graph.getModel().getValue(list[i]))){
+                WarningLabel.setForeground(Color.red);
                 return false;
             }
         }
-        WarningLabel.setForeground(white_blue);
+        WarningLabel.setForeground(GREY);
         return true;
     }
 
 
-    public  boolean isInteger(String s, int radix) {
+    public  boolean checkInteger(String s) {
         if(s.isEmpty()) return false;
+        //if the user enter -ve sign only
         for(int i = 0; i < s.length(); i++) {
             if(i == 0 && s.charAt(i) == '-') {
                 if(s.length() == 1) return false;
                 else continue;
             }
-            if(Character.digit(s.charAt(i),radix) < 0) return false;
+           // if(Character.digit(s.charAt(i),10) < 0) return false;
+            if(Character.digit(s.charAt(i),10) < 0) return false;
+
         }
         return true;
     }
 
-    public boolean checkNodesNames(){
+    public boolean isRedundantNode(){
         Object[] list = graph.getChildVertices(graph.getDefaultParent());
         for(int i=0;i<list.length-1;i++){
             String first=(String)((mxICell)list[i]).getValue();
@@ -362,11 +364,11 @@ public class GUI extends JFrame {
             String name = (String) ver.getValue();
             if((outputNode.getText()).equals(name))
             {
-                WarningLabel.setForeground(white_blue);
+                WarningLabel.setForeground(GREY);
                 return true;
             }
         }
-        WarningLabel.setForeground(new Color(225, 5, 108));
+        WarningLabel.setForeground(Color.red);
         return false;
     }
 }
