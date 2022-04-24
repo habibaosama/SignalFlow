@@ -30,7 +30,7 @@ public class GUI extends JFrame {
     JPanel panel;
     GraphFlow finalGraph ;
     public static final Color GREY = new Color(204, 204, 204);
-    public static final  Color c = new Color(255, 153, 204);
+    public static final  Color c = new Color(255, 163, 26);
     public static final Color c2 = new Color(153, 204, 255 );
     public static final Color c3 = new Color(251, 251, 251);
     JLabel WarningLabel;
@@ -104,7 +104,7 @@ public class GUI extends JFrame {
         JButton addBtn = new JButton("Add Node");
         addBtn.setBounds(40,105,100, 40);
         addBtn.setBackground(c);
-        addBtn.setForeground(Color.gray);
+        addBtn.setForeground(Color.black);
         addBtn.setFont(boldFont);
         addBtn.setBorder(BorderFactory.createEmptyBorder());
         addBtn.addActionListener(new ActionListener(){
@@ -117,7 +117,7 @@ public class GUI extends JFrame {
         JButton clearBtn = new JButton("Clear");
         clearBtn.setBounds(230,105,100,40);
         clearBtn.setBackground(c);
-        clearBtn.setForeground(Color.gray);
+        clearBtn.setForeground(Color.black);
         clearBtn.setFont(boldFont);
         clearBtn.setBorder(BorderFactory.createEmptyBorder());
         clearBtn.addActionListener(new ActionListener(){
@@ -133,7 +133,7 @@ public class GUI extends JFrame {
         JButton startBtn = new JButton("Calculate");
         startBtn.setBounds(40,250,100,40);
         startBtn.setBackground(c);
-        startBtn.setForeground(Color.gray);
+        startBtn.setForeground(Color.black);
         startBtn.setFont(boldFont);
         startBtn.setBorder(BorderFactory.createEmptyBorder());
         startBtn.addActionListener(new ActionListener(){
@@ -162,7 +162,7 @@ public class GUI extends JFrame {
         ///////////////////////////////////*****NOT  YET******/////////////////////////
         //FOR warning label
         WarningLabel=new JLabel();
-        WarningLabel.setBounds(30,260,350,50);
+        WarningLabel.setBounds(100,298,350,50);
         WarningLabel.setForeground(GREY);
         boldFont = new Font("SansSerif", Font.BOLD, 16);
         WarningLabel.setFont(boldFont);
