@@ -1,5 +1,7 @@
 package GUI;
 
+import Calculations.GraphFlow;
+import Calculations.Vertex;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
@@ -16,28 +18,26 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class GUI extends JFrame {
     mxGraph graph;
     // ely 3liha el buttons
-    JPanel mainPane;
+    JPanel main;
     //ely 7nrsm 3liha
-    JPanel panelComp;
-
-    public static final Color GREY = new Color(204, 204, 204);
-    public static final  Color c = new Color(255, 153, 204);
+    JPanel panel;
+    GraphFlow finalGraph ;
+    public static final Color white_blue = new Color(204, 204, 204);
+    public static final  Color col = new Color(255, 153, 204);
     public static final Color c2 = new Color(153, 204, 255 );
     public static final Color c3 = new Color(251, 251, 251);
-
-    JButton addVertexBtn;
-    JButton startBtn;
-    JButton removeGraphBtn;
     JLabel WarningLabel;
     JTextArea display;
-    JTextField txt;
+    JTextField outputNode;
     public String output = "";
-   // LinkedList<Object> redo;
+    // LinkedList<Object> redo;
     public GUI() {
         super("Signal-Flow Graph");
 
@@ -53,12 +53,11 @@ public class GUI extends JFrame {
         }
         finally
         {
-           graph.getModel().endUpdate();
+            graph.getModel().endUpdate();
         }
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
         graphComponent.setConnectable(true);
         graphComponent.getViewport().setOpaque(true);
-
         graphComponent.getViewport().setBackground(c3);
         //setting dimension of the drawing board
         graph.getModel().setGeometry(graph.getDefaultParent(), new mxGeometry(990, 750, 0, 0));
@@ -84,44 +83,45 @@ public class GUI extends JFrame {
                 }
 
         );
-        mainPane.add(graphComponent);
+        main.add(graphComponent);
         setEdgeStyle();
     }
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void initComponents() {
 
         getContentPane().setLayout(new BorderLayout());
-        mainPane = new JPanel();
-        mainPane.setBackground(c3);
-        panelComp = new JPanel();
-        panelComp.setLayout(null);
-        panelComp.setBackground(GREY);
-        getContentPane().add(panelComp, BorderLayout.CENTER);
-        getContentPane().add(mainPane, BorderLayout.EAST);
+        main = new JPanel();
+        main.setBackground(c3);
+        panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(white_blue);
+        getContentPane().add(panel, BorderLayout.CENTER);
+        getContentPane().add(main, BorderLayout.EAST);
         //redo = new LinkedList<Object>();
+
         //BUTTONS
         Font boldFont = new Font("SansSerif", Font.BOLD, 16);
         //FOR ADDING A VERTEX
-        addVertexBtn = new JButton("Add Node");
-        addVertexBtn.setBounds(40,105,100, 40);
-        addVertexBtn.setBackground(c);
-        addVertexBtn.setForeground(Color.gray);
-        addVertexBtn.setFont(boldFont);
-        addVertexBtn.setBorder(BorderFactory.createEmptyBorder());
-        addVertexBtn.addActionListener(new ActionListener(){
+        JButton addBtn = new JButton("Add Node");
+        addBtn.setBounds(40,105,100, 40);
+        addBtn.setBackground(col);
+        addBtn.setForeground(Color.gray);
+        addBtn.setFont(boldFont);
+        addBtn.setBorder(BorderFactory.createEmptyBorder());
+        addBtn.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 addvertex();
             }
         });
 
         //FOR REMOVING THE WHOLE GRAPH
-        removeGraphBtn = new JButton("Clear");
-        removeGraphBtn.setBounds(230,105,100,40);
-        removeGraphBtn.setBackground(c);
-        removeGraphBtn.setForeground(Color.gray);
-        removeGraphBtn.setFont(boldFont);
-        removeGraphBtn.setBorder(BorderFactory.createEmptyBorder());
-        removeGraphBtn.addActionListener(new ActionListener(){
+        JButton clearBtn = new JButton("Clear");
+        clearBtn.setBounds(230,105,100,40);
+        clearBtn.setBackground(col);
+        clearBtn.setForeground(Color.gray);
+        clearBtn.setFont(boldFont);
+        clearBtn.setBorder(BorderFactory.createEmptyBorder());
+        clearBtn.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
                 graph.getModel().beginUpdate();
@@ -131,24 +131,24 @@ public class GUI extends JFrame {
         });
 
         //FOR STARTING CALCULATION
-        startBtn = new JButton("Calculate");
+        JButton startBtn = new JButton("Calculate");
         startBtn.setBounds(40,250,100,40);
-        startBtn.setBackground(c);
+        startBtn.setBackground(col);
         startBtn.setForeground(Color.gray);
         startBtn.setFont(boldFont);
         startBtn.setBorder(BorderFactory.createEmptyBorder());
         startBtn.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 if(checkEdgesValue() && checkNodesNames() && textExists()){
-                    //startCalculation();
+                    startCalculation();
                 }
             }
         });
-       ///////////////////////////////////////////EXit//////////////////////////////////////
+        ///////////////////////////////////////////EXit//////////////////////////////////////
         boldFont = new Font("SansSerif", Font.BOLD, 14);
 
         //FOR EXIT BUTTON:
-        JButton exitBtn = new JButton("Exit");
+        JButton exitBtn = new JButton("Exit ");
         exitBtn.setBounds(360,33,80,30);
         exitBtn.setBackground(c2);
         exitBtn.setForeground(Color.BLACK);
@@ -163,7 +163,7 @@ public class GUI extends JFrame {
         //FOR warning label
         WarningLabel=new JLabel();
         WarningLabel.setBounds(30,260,350,50);
-        WarningLabel.setForeground(GREY);
+        WarningLabel.setForeground(white_blue);
         boldFont = new Font("SansSerif", Font.BOLD, 16);
         WarningLabel.setFont(boldFont);
         WarningLabel.setText("Make sure your entry is not wrong!");
@@ -208,24 +208,24 @@ public class GUI extends JFrame {
         txtlbl.setForeground(Color.BLACK);
         txtlbl.setText("Output Node Name:");
         txtlbl.setFont(boldFont);
-        txt = new JTextField();
-        txt.setBounds(230, 200, 150, 25);
-        txt.setFont(boldFont);
+        outputNode = new JTextField();
+        outputNode.setBounds(230, 200, 150, 25);
+        outputNode.setFont(boldFont);
 ////////////////////////////////////////////////////////////
-        panelComp.add(txtlbl);
-        panelComp.add(txt);
-        panelComp.add(scroll);
+        panel.add(txtlbl);
+        panel.add(outputNode);
+        panel.add(scroll);
         //panelComp.add(userGuide);
-        panelComp.add(lbl);
-        panelComp.add(lb);
-        panelComp.add(exitBtn);
+        panel.add(lbl);
+        panel.add(lb);
+        panel.add(exitBtn);
         //panelComp.add(redoBtn);
         //panelComp.add(undoBtn);
-        panelComp.add(addVertexBtn);
+        panel.add(addBtn);
         //ana 3mlt comment
-        panelComp.add(startBtn);
-        panelComp.add(removeGraphBtn);
-        panelComp.add(WarningLabel);
+        panel.add(startBtn);
+        panel.add(clearBtn);
+        panel.add(WarningLabel);
     }
     //////////////////////////////////////////////////VERTEX////////////////////////////////////////////
     public void resetGraph(){
@@ -234,7 +234,7 @@ public class GUI extends JFrame {
     }
     public void addvertex(){
         //30 30
-        Object v = graph.insertVertex(graph.getDefaultParent(), null,"Name" , 30, 30, 55, 55);
+        Object v = graph.insertVertex(graph.getDefaultParent(), null,"Text" , 0.5, 0.5, 55, 55);
         mxICell ver = (mxICell) v;
         setVertexStyle(ver, "#33ccff");
         resetGraph();
@@ -273,10 +273,46 @@ public class GUI extends JFrame {
         frame.setUndecorated(true);
         frame.setVisible(true);
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public void startCalculation()
+    {
+        Object[] list = graph.getChildVertices(graph.getDefaultParent());
+        LinkedList vertices = new LinkedList(Arrays.asList(list));
+        finalGraph = new GraphFlow(list.length);
+        System.out.println(list.length);
+        for(int i=0; i< list.length; i++)
+        {
+            mxICell vertex = (mxICell) list[i];
+            //array of the edges
+            //getEdges(	cell,parent,incoming,outgoing,includeLoops,recurse	)
+            //return the incoming/outgoing edges
+            Object[] edges = graph.getEdges(vertex, graph.getDefaultParent(), false, true, true);
+            for (int j =0; j<edges.length; j++)
+            {
+                String source = (String) vertex.getValue();
+                Vertex sourceNode = new Vertex(i, source);
+                if(source.equals(outputNode.getText()))
+                    sourceNode.setOutput(true);
+                String destination =(String) (((mxICell)edges[j]).getTerminal(false)).getValue();
+
+                int index = vertices.indexOf(((mxICell)edges[j]).getTerminal(false));
+
+                Vertex destinationNode = new Vertex(index, destination);
+                if(destination.equals(outputNode.getText()))
+                    destinationNode.setOutput(true);
+                System.out.println("source-"+sourceNode.getName() + "dest -"+ destinationNode.getName()+ "weight-" + Integer.valueOf((String) graph.getModel().getValue(edges[j])));
+                finalGraph.addEgde(sourceNode, destinationNode, Integer.valueOf((String) graph.getModel().getValue(edges[j])));
+
+            }
+
+        }
+        //this.output = finalGraph.printResults();
+        this.display.setText(this.output);
+
+    }
 
 
-
-/////////////////////////////NOT Yet Checks//////////////////////////////////////////
+    /////////////////////////////NOT Yet Checks//////////////////////////////////////////
     public boolean checkEdgesValue(){
         Object[] list = graph.getChildEdges(graph.getDefaultParent());
         for(int i=0; i< list.length; i++){
@@ -285,7 +321,7 @@ public class GUI extends JFrame {
                 return false;
             }
         }
-        WarningLabel.setForeground(GREY);
+        WarningLabel.setForeground(white_blue);
         return true;
     }
 
@@ -323,9 +359,9 @@ public class GUI extends JFrame {
         {
             mxICell ver = (mxICell) list[i];
             String name = (String) ver.getValue();
-            if((txt.getText()).equals(name))
+            if((outputNode.getText()).equals(name))
             {
-                WarningLabel.setForeground(GREY);
+                WarningLabel.setForeground(white_blue);
                 return true;
             }
         }
