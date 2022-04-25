@@ -139,10 +139,13 @@ public class LoopDetection {
                 boolean touching = false;
                 for (int j = 0; j < loops.get(i).size(); j++) {
                     element = loops.get(i).get(j);
-                    if (loops.get(k).contains(element)) {
-                        touching = true;
-                        break;
+                    for (int l=0;l<loops.get(k).size();l++){
+                        if (loops.get(k).get(l).getName().equals(element.getName())) {
+                            touching = true;
+                            break;
+                        }
                     }
+
                 }
                 if (!touching) {
                     currRes.add(new Vector<>());
@@ -167,9 +170,11 @@ public class LoopDetection {
                     boolean touching = false;
                     for (int j = 0; j < loops.get(i).size(); j++) {
                         element = loops.get(i).get(j);
-                        if (prevNonTouchingLoops.get(k).contains(element)) {
-                            touching = true;
-                            break;
+                        for (int l=0;l<prevNonTouchingLoops.get(k).size();l++){
+                            if (prevNonTouchingLoops.get(k).get(l).getName().equals(element.getName())) {
+                                touching = true;
+                                break;
+                            }
                         }
                     }
                     if (!touching) {
