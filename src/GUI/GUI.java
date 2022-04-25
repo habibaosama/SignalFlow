@@ -319,10 +319,10 @@ public class GUI extends JFrame {
         LoopDetection loopDetection = new LoopDetection(finalGraph);
         loops = loopDetection.getLoops();
 
-        Vector<Vector<Vector<Edge>>> nonTouchingLoops = loopDetection.getNonTouchingLoops();
+        Vector<Vector<Vector<Vertex>>> nonTouchingLoops = loopDetection.getNonTouchingLoops();
         for (int i = 0; i < loops.size(); i++) {
             for (int j = 0; j < loops.get(i).size(); j++) {
-                System.out.print(loops.get(i).get(j).getSource().getName() +" ");
+                System.out.print(loops.get(i).get(j).getSource().getName() +" --> ");
                 if(j== loops.get(i).size()-1) System.out.println(loops.get(i).get(j).getDestination().getName() +" ");
             }
         }
@@ -331,8 +331,11 @@ public class GUI extends JFrame {
             System.out.println((i + 2) + " nonTouchingLoops: ");
             for (int j = 0; j < nonTouchingLoops.get(i).size(); j++) {
                 for (int k = 0; k < nonTouchingLoops.get(i).get(j).size(); k++) {
-                    System.out.print(nonTouchingLoops.get(i).get(j).get(k).getSource().getName() + " ");
-                    if(k== nonTouchingLoops.get(i).get(j).size()-1) System.out.println(nonTouchingLoops.get(i).get(j).get(k).getDestination().getName() + " ");
+                    if(k!= nonTouchingLoops.get(i).get(j).size()-1) {
+                        System.out.print(nonTouchingLoops.get(i).get(j).get(k).getName() + " --> ");
+                    }else{
+                        System.out.print(nonTouchingLoops.get(i).get(j).get(k).getName() +"\n");
+                    }
                 }
             }
         }

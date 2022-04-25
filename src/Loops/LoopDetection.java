@@ -194,8 +194,8 @@ public class LoopDetection {
         }
     }
 
-    public Vector<Vector<Vector<Edge>>> getNonTouchingLoops() {
-        return nonTouchingEdges;
+    public Vector<Vector<Vector<Vertex>>> getNonTouchingLoops() {
+        return nonTouchingLoops;
     }
 
 
