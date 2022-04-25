@@ -6,10 +6,10 @@ import java.util.Vector;
 public class GraphFlow {
     private LinkedList<Edge>[] Graphlist;
     private Vertex[] vertices;
-    private LinkedList<LinkedList<Edge>> forwardPaths = new LinkedList<LinkedList<Edge>>();
+    public LinkedList<LinkedList<Edge>> forwardPaths = new LinkedList<LinkedList<Edge>>();
     private LinkedList<Edge> forwardPath = new LinkedList<Edge>();
     private boolean[] visited=new boolean[1000];
-    private long[] gain=new long[1000];//contains the gain of every path "bltarteeb" :)
+    public long[] gain=new long[1000];//contains the gain of every path "bltarteeb" :)
 
     public GraphFlow(int vertices) {
         Graphlist = new LinkedList[vertices];

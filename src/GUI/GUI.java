@@ -341,7 +341,7 @@ public class GUI extends JFrame {
                 if(s.length() == 1) return false;
                 else continue;
             }
-           // if(Character.digit(s.charAt(i),10) < 0) return false;
+            // if(Character.digit(s.charAt(i),10) < 0) return false;
             if(Character.digit(s.charAt(i),10) < 0) return false;
 
         }
@@ -379,4 +379,3 @@ public class GUI extends JFrame {
         return false;
     }
 }
-
