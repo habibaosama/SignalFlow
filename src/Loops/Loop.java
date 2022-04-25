@@ -18,9 +18,10 @@ public class Loop {
         if (id == end) {
             path.add(path.get(0));
             loops.add((Vector<Vertex>) path.clone());
+            visited[path.get(path.size()-1).getId()] =false;
+            visited[path.get(path.size()-2).getId()] =false;
             path.remove(path.size() - 1);
             path.remove(path.size() - 1);
-
             return;
         }
         for (Edge i : graph.getGraphlist()[id]) {
@@ -31,6 +32,7 @@ public class Loop {
                 dfs(newId, path, end);
             }
         }
+        visited[path.get(path.size()-1).getId()] =false;
         path.remove(path.size() - 1);
     }
 

@@ -3,6 +3,8 @@ package Loops;
 import Calculations.Edge;
 import Calculations.GraphFlow;
 import Calculations.Vertex;
+
+import java.util.LinkedList;
 import java.util.Vector;
 
 public class LoopDetection {
@@ -12,13 +14,68 @@ public class LoopDetection {
     private Vector<Vector<Edge>> loopsEdges;
     private Vector<Vector<Vector<Vertex>>> nonTouchingLoops;
     private Vector<Vector<Vector<Edge>>> nonTouchingEdges;
+    private Vector<Vector<Double>> nonTouchingGains;
+    private Vector<Double> loopsGain;
+    private Vector<Double> deltaI;
 
 
     public LoopDetection(GraphFlow graph) {
         this.graph = graph;
         this.nonTouchingLoops = new Vector<>();
         this.nonTouchingEdges = new Vector<>();
+        this.nonTouchingGains = new Vector<>();
+        this.loopsGain = new Vector<>();
+        this.deltaI = new Vector<>();
+    }
 
+    private Double getGain(Vector<Edge> loop) {
+        double res = 1;
+        for (Edge k : loop) {
+            res *= k.getWeight();
+        }
+        return res;
+    }
+
+    private void generateLoopGains() {
+        for (Vector<Edge> i : loopsEdges) {
+            Double res = getGain(i);
+            loopsGain.add(res);
+        }
+    }
+
+    private boolean compareLoopAndPath(Vector<Vertex> loop, LinkedList<Edge> path) {
+        for (Vertex i : loop) {
+            for (Edge j : path) {
+                if (j.getDestination() == i || j.getSource() == i) return false;
+            }
+        }
+        return true;
+    }
+
+    public void generateDeltaI() {
+        LinkedList<LinkedList<Edge>> forwardPaths = graph.forwardPaths;
+        for (int i = 0; i < forwardPaths.size(); i++) {
+            double sum = 0;
+            for (int j = 0; j < nonTouchingLoops.size(); i++) {
+                for (int k = 0; k < nonTouchingLoops.get(i).size(); k++) {
+                    if (compareLoopAndPath(nonTouchingLoops.get(j).get(k), forwardPaths.get(i))) {
+                        sum += Math.pow(-1, j + 1) * nonTouchingGains.get(k).get(k);
+                    }
+                }
+            }
+            deltaI.add(1-sum);
+        }
+    }
+
+    private void generateNonTouchingGains() {
+        Vector<Double> results = new Vector<>();
+        for (Vector<Vector<Edge>> i : nonTouchingEdges) {
+            for (Vector<Edge> j : i) {
+                Double res = getGain(j);
+                results.add(res);
+            }
+            nonTouchingGains.add(results);
+        }
     }
 
     private Vector<Edge> getEdges(Vector<Vertex> path) {
@@ -48,6 +105,7 @@ public class LoopDetection {
         }
     }
 
+
     public Vector<Vector<Edge>> getLoops() {
         visited = new boolean[graph.getGraphlist().length];
         loops = new Vector<>();
@@ -59,6 +117,9 @@ public class LoopDetection {
         }
         generateLoopsEdges();
         generateNonTouchingLoops();
+        generateLoopGains();
+        generateNonTouchingGains();
+        generateDeltaI();
         return this.loopsEdges;
     }
 
@@ -132,4 +193,5 @@ public class LoopDetection {
             loopsEdges.add(getEdges(i));
         }
     }
+
 }
