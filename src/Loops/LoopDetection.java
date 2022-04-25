@@ -10,6 +10,7 @@ import java.util.Vector;
 public class LoopDetection {
     private GraphFlow graph;
     private boolean[] visited;
+    private int[] stage;
     private Vector<Vector<Vertex>> loops;
     private Vector<Vector<Edge>> loopsEdges;
     private Vector<Vector<Vector<Vertex>>> nonTouchingLoops;
@@ -26,6 +27,7 @@ public class LoopDetection {
         this.nonTouchingGains = new Vector<>();
         this.loopsGain = new Vector<>();
         this.deltaI = new Vector<>();
+        this.stage = new int[graph.getGraphlist().length];
     }
 
     private Double getGain(Vector<Edge> loop) {
@@ -63,7 +65,7 @@ public class LoopDetection {
                     }
                 }
             }
-            deltaI.add(1-sum);
+            deltaI.add(1 + sum);
         }
     }
 
@@ -91,14 +93,16 @@ public class LoopDetection {
         return res;
     }
 
-    private void dfs(Vertex source) {
+    private void dfs(Vertex source, int stage) {
         int newId;
+        this.stage[source.getId()] = stage + 1;
+
         for (Edge i : graph.getGraphlist()[source.getId()]) {
             newId = i.getDestination().getId();
             if (!visited[newId]) {
                 visited[newId] = true;
-                dfs(i.getDestination());
-            } else {
+                dfs(i.getDestination(), stage + 1);
+            } else if (this.stage[i.getDestination().getId()] < this.stage[source.getId()]) {
                 Loop loop = new Loop(i.getDestination(), source, graph);
                 loops.addAll(loop.getLoops());
             }
@@ -112,7 +116,7 @@ public class LoopDetection {
         for (int i = 0; i < graph.getGraphlist().length; i++) {
             if (!visited[i]) {
                 visited[i] = true;
-                dfs(graph.getVertices()[i]);
+                dfs(graph.getVertices()[i], 0);
             }
         }
         generateLoopsEdges();

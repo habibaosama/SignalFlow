@@ -90,7 +90,6 @@ public class GraphFlow {
             System.out.print("= " + gain);
             System.out.println();
         }
-        //System.out.println(this.gain[0]+"  "+this.gain[1]+"   "+this.gain[2]);
     }
 
 
