@@ -1,7 +1,9 @@
 package GUI;
 
+import Calculations.Edge;
 import Calculations.GraphFlow;
 import Calculations.Vertex;
+import Loops.LoopDetection;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
@@ -18,9 +20,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Vector;
 
 public class GUI extends JFrame {
     mxGraph graph;
@@ -311,6 +315,29 @@ public class GUI extends JFrame {
         finalGraph.printPaths();
         // finalGraph.findGains();
         //finalGraph.printGains();
+        Vector<Vector<Edge>> loops;
+        LoopDetection loopDetection = new LoopDetection(finalGraph);
+        loops = loopDetection.getLoops();
+
+        Vector<Vector<Vector<Edge>>> nonTouchingLoops = loopDetection.getNonTouchingLoops();
+        for (int i = 0; i < loops.size(); i++) {
+            for (int j = 0; j < loops.get(i).size(); j++) {
+                System.out.print(loops.get(i).get(j).getSource().getName() +" ");
+                if(j== loops.get(i).size()-1) System.out.println(loops.get(i).get(j).getDestination().getName() +" ");
+            }
+        }
+
+        for (int i = 0; i < nonTouchingLoops.size(); i++) {
+            System.out.println((i + 2) + " nonTouchingLoops: ");
+            for (int j = 0; j < nonTouchingLoops.get(i).size(); j++) {
+                for (int k = 0; k < nonTouchingLoops.get(i).get(j).size(); k++) {
+                    System.out.print(nonTouchingLoops.get(i).get(j).get(k).getSource().getName() + " ");
+                    if(k== nonTouchingLoops.get(i).get(j).size()-1) System.out.println(nonTouchingLoops.get(i).get(j).get(k).getDestination().getName() + " ");
+                }
+            }
+        }
+        System.out.println("done");
+
         this.display.setText(this.output);
     }
     //this.output = finalGraph.printResults();

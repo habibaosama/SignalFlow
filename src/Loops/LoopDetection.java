@@ -58,10 +58,10 @@ public class LoopDetection {
         LinkedList<LinkedList<Edge>> forwardPaths = graph.forwardPaths;
         for (int i = 0; i < forwardPaths.size(); i++) {
             double sum = 0;
-            for (int j = 0; j < nonTouchingLoops.size(); i++) {
-                for (int k = 0; k < nonTouchingLoops.get(i).size(); k++) {
+            for (int j = 0; j < nonTouchingLoops.size(); j++) {
+                for (int k = 0; k < nonTouchingLoops.get(j).size(); k++) {
                     if (compareLoopAndPath(nonTouchingLoops.get(j).get(k), forwardPaths.get(i))) {
-                        sum += Math.pow(-1, j + 1) * nonTouchingGains.get(k).get(k);
+                        sum += Math.pow(-1, j+1) * nonTouchingGains.get(j).get(k);
                     }
                 }
             }
@@ -111,14 +111,17 @@ public class LoopDetection {
 
 
     public Vector<Vector<Edge>> getLoops() {
+
         visited = new boolean[graph.getGraphlist().length];
         loops = new Vector<>();
+
         for (int i = 0; i < graph.getGraphlist().length; i++) {
             if (!visited[i]) {
                 visited[i] = true;
                 dfs(graph.getVertices()[i], 0);
             }
         }
+
         generateLoopsEdges();
         generateNonTouchingLoops();
         generateLoopGains();

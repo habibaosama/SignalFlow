@@ -66,9 +66,10 @@ public class GraphFlow {
         LinkedList<Edge> v1 = Graphlist[0];//Always start from the input node.
 
         visited[0] = true;//input node can't be revisited!!
-
+       // System.out.print("hhhhhhh");
         for (int i = 0; i < v1.size(); i++) {
             findForwardPaths(v1.get(i));
+          //  System.out.print(v1.get(i).getDestination().getName()+"kkkkkk");
             forwardPath.clear();
         }
 
