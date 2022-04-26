@@ -7,6 +7,7 @@ import java.util.Vector;
 
 public class TransferFunction {
     private GraphFlow graph;
+
     private Double sumOfLoops(Vector<Double> gains){
 
         Double sum=0.0;
@@ -49,7 +50,6 @@ public class TransferFunction {
             result+=gain[i]*deltaI.get(i);
         }
         result=result/deltaTotal;
-        System.out.println("The Transfer Function = "+result);
         return result;
     }
 }

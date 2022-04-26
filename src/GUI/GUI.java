@@ -128,10 +128,7 @@ public class GUI extends JFrame {
         clearBtn.setBorder(BorderFactory.createEmptyBorder());
         clearBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
-                graph.getModel().beginUpdate();
-                graph.getModel().endUpdate();
-                addvertex();
+                clear();
             }
         });
 
@@ -165,7 +162,7 @@ public class GUI extends JFrame {
                 System.exit(0);
             }
         });
-        ///////////////////////////////////*****NOT  YET******/////////////////////////
+        /////////////////////////////////////////////////////////////////
         //FOR warning label
         WarningLabel = new JLabel();
         WarningLabel.setBounds(100, 298, 350, 50);
@@ -196,14 +193,14 @@ public class GUI extends JFrame {
         //as it is the results can't edit in this area
         display.setEditable(false); // set textArea non-editable
         //display.setBackground(new Color(176, 175, 179 ));
-        display.setBackground(Color.white);
+        display.setBackground(Color.black);
         boldFont = new Font("SansSerif", Font.BOLD, 17);
         display.setForeground(c3);
         display.setFont(boldFont);
         display.setBorder(new EmptyBorder(50, 20, 0, 0));//top,left,bottom,right
         JScrollPane scroll = new JScrollPane(display);
-        scroll.setBounds(20, 350, 400, 430);
-        scroll.setSize(400, 500);
+        scroll.setBounds(20, 350, 300, 1000);
+        scroll.setSize(300, 1000);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         /////////////////////////////////////////////////////////////////////////
@@ -241,10 +238,18 @@ public class GUI extends JFrame {
     }
 
     public void addvertex() {
-        Object v = graph.insertVertex(graph.getDefaultParent(), null, "Name", 30, 30, 55, 55);
+        Object v = graph.insertVertex(graph.getDefaultParent(), null, "Name", -100, -100, 55, 55);
         mxICell ver = (mxICell) v;
         setVertexStyle(ver, "#33ccff");
         resetGraph();
+    }
+
+    void clear() {
+        graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
+        graph.getModel().beginUpdate();
+        graph.getModel().endUpdate();
+        output = "";
+        addvertex();
     }
 
     //STYLES FOR VERTICES
@@ -287,12 +292,9 @@ public class GUI extends JFrame {
         Object[] list = graph.getChildVertices(graph.getDefaultParent());
         LinkedList vertices = new LinkedList(Arrays.asList(list));
         finalGraph = new GraphFlow(list.length);
-        System.out.println(list.length);
+        this.output += "Number of Nodes = " + list.length + "\n";
         for (int i = 0; i < list.length; i++) {
             mxICell vertex = (mxICell) list[i];
-            //array of the edges
-            //getEdges(	cell,parent,incoming,outgoing,includeLoops,recurse	)
-            //return the incoming/outgoing edges
             Object[] edges = graph.getEdges(vertex, graph.getDefaultParent(), false, true, true);
             for (int j = 0; j < edges.length; j++) {
                 String source = (String) vertex.getValue();
@@ -306,56 +308,53 @@ public class GUI extends JFrame {
                 Vertex destinationNode = new Vertex(index, destination);
                 if (destination.equals(outputNode.getText()))
                     destinationNode.setOutput(true);
-                System.out.println("source-" + sourceNode.getName() + "dest -" + destinationNode.getName() + "weight-" + Integer.valueOf((String) graph.getModel().getValue(edges[j])));
+                this.output += "source-" + sourceNode.getName() + "dest: " + destinationNode.getName() + " weight: " + Integer.valueOf((String) graph.getModel().getValue(edges[j])) + "\n";
                 finalGraph.addEgde(sourceNode, destinationNode, Integer.valueOf((String) graph.getModel().getValue(edges[j])));
 
             }
 
         }
-        //finalGraph.debugGraph();
+        calculateOutput();
+        this.display.setText(this.output);
+
+    }
+
+    public void calculateOutput() {
         finalGraph.findForwardPaths();
-        finalGraph.printPaths();
-        // finalGraph.findGains();
-        //finalGraph.printGains();
+        this.output += finalGraph.getForwardPathsOutput();
         Vector<Vector<Edge>> loops;
         LoopDetection loopDetection = new LoopDetection(finalGraph);
         loops = loopDetection.getLoops();
-
-        Vector<Vector<Vector<Vertex>>> nonTouchingLoops = loopDetection.getNonTouchingLoops();
+        this.output += loopDetection.getDeltaIString();
         Vector<Vector<Vector<Edge>>> nonTouchingEdges = loopDetection.getNonTouchingEdges();
         for (int i = 0; i < loops.size(); i++) {
-            System.out.print("L"+(i+1)+" = ");
+            this.output += "L" + (i + 1) + " = ";
             for (int j = 0; j < loops.get(i).size(); j++) {
-                System.out.print(loops.get(i).get(j).getSource().getName() +" --> ");
-                if(j== loops.get(i).size()-1) System.out.println(loops.get(i).get(j).getDestination().getName() +" = "+loopDetection.loopsGain.get(i));
+                this.output += loops.get(i).get(j).getSource().getName() + " --> ";
+                if (j == loops.get(i).size() - 1)
+                    this.output += loops.get(i).get(j).getDestination().getName() + " = " + loopDetection.loopsGain.get(i) + "\n";
             }
         }
 
-        int n=0;
+
         for (int i = 0; i < nonTouchingEdges.size(); i++) {
-            System.out.println((i + 2) + " nonTouchingLoops: ");
+            this.output += (i + 2) + " nonTouchingLoops: \n";
             for (int j = 0; j < nonTouchingEdges.get(i).size(); j++) {
-               System.out.println(loopDetection.loopTouch[i][j]+" = "+loopDetection.nonTouchingGains.get(i).get(j));
+                this.output += loopDetection.loopTouch[i][j] + " = " + loopDetection.nonTouchingGains.get(i).get(j) + "\n";
             }
         }
-        Double res=tf.deltaTotal(loopDetection.loopsGain,loopDetection.nonTouchingGains);
-        tf.TransFunction(res,loopDetection.deltaI,finalGraph.gain);
-
+        Double res = tf.deltaTotal(loopDetection.loopsGain, loopDetection.nonTouchingGains);
+        this.output += "The Transfer Function = " + tf.TransFunction(res, loopDetection.deltaI, finalGraph.gain) + "\n";
         System.out.println("done");
 
-        this.display.setText(this.output);
     }
-    //this.output = finalGraph.printResults();
-
-
-
 
 
     /////////////////////////////NOT Yet Checks//////////////////////////////////////////
-    public boolean checkEdgesValue(){
+    public boolean checkEdgesValue() {
         Object[] list = graph.getChildEdges(graph.getDefaultParent());
-        for(int i=0; i< list.length; i++){
-            if(!checkInteger((String) graph.getModel().getValue(list[i]))){
+        for (int i = 0; i < list.length; i++) {
+            if (!checkInteger((String) graph.getModel().getValue(list[i]))) {
                 WarningLabel.setForeground(Color.red);
                 return false;
             }
@@ -365,28 +364,28 @@ public class GUI extends JFrame {
     }
 
 
-    public  boolean checkInteger(String s) {
-        if(s.isEmpty()) return false;
+    public boolean checkInteger(String s) {
+        if (s.isEmpty()) return false;
         //if the user enter -ve sign only
-        for(int i = 0; i < s.length(); i++) {
-            if(i == 0 && s.charAt(i) == '-') {
-                if(s.length() == 1) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (i == 0 && s.charAt(i) == '-') {
+                if (s.length() == 1) return false;
                 else continue;
             }
             // if(Character.digit(s.charAt(i),10) < 0) return false;
-            if(Character.digit(s.charAt(i),10) < 0) return false;
+            if (Character.digit(s.charAt(i), 10) < 0) return false;
 
         }
         return true;
     }
 
-    public boolean isRedundantNode(){
+    public boolean isRedundantNode() {
         Object[] list = graph.getChildVertices(graph.getDefaultParent());
-        for(int i=0;i<list.length-1;i++){
-            String first=(String)((mxICell)list[i]).getValue();
-            for (int j=i+1;j<list.length;j++){
-                String second =(String)((mxICell)list[j]).getValue();
-                if(first.equalsIgnoreCase(second)){
+        for (int i = 0; i < list.length - 1; i++) {
+            String first = (String) ((mxICell) list[i]).getValue();
+            for (int j = i + 1; j < list.length; j++) {
+                String second = (String) ((mxICell) list[j]).getValue();
+                if (first.equalsIgnoreCase(second)) {
                     WarningLabel.setForeground(Color.red);
                     return false;
                 }
@@ -394,15 +393,13 @@ public class GUI extends JFrame {
         }
         return true;
     }
-    public boolean textExists()
-    {
+
+    public boolean textExists() {
         Object[] list = graph.getChildVertices(graph.getDefaultParent());
-        for(int i=0; i<list.length; i++)
-        {
+        for (int i = 0; i < list.length; i++) {
             mxICell ver = (mxICell) list[i];
             String name = (String) ver.getValue();
-            if((outputNode.getText()).equals(name))
-            {
+            if ((outputNode.getText()).equals(name)) {
                 WarningLabel.setForeground(GREY);
                 return true;
             }

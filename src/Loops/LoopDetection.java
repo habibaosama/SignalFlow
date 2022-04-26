@@ -2,6 +2,7 @@ package Loops;
 
 import Calculations.Edge;
 import Calculations.GraphFlow;
+import Calculations.TransferFunction;
 import Calculations.Vertex;
 
 import java.util.LinkedList;
@@ -18,7 +19,8 @@ public class LoopDetection {
     public Vector<Vector<Double>> nonTouchingGains;
     public Vector<Double> loopsGain;
     public Vector<Double> deltaI;
-    public String[][] loopTouch=new String[1000][1000];
+    public String[][] loopTouch = new String[1000][1000];
+    private String deltaIString;
 
     public LoopDetection(GraphFlow graph) {
         this.graph = graph;
@@ -28,6 +30,7 @@ public class LoopDetection {
         this.loopsGain = new Vector<>();
         this.deltaI = new Vector<>();
         this.stage = new int[graph.getGraphlist().length];
+        this.deltaIString = "";
     }
 
     private Double getGain(Vector<Edge> loop) {
@@ -57,7 +60,11 @@ public class LoopDetection {
     private void generateDeltaI() {
         computeDeltaIWithNonTouching();
         computeDeltaIWithLoops();
+        fillDeltaI();
+    }
 
+    public String getDeltaIString() {
+        return deltaIString;
     }
 
     private void computeDeltaIWithNonTouching() {
@@ -90,6 +97,7 @@ public class LoopDetection {
 
         }
     }
+
 
     private void generateNonTouchingGains() {
         Vector<Double> results = new Vector<>();
@@ -162,7 +170,7 @@ public class LoopDetection {
                 boolean touching = false;
                 for (int j = 0; j < loops.get(i).size(); j++) {
                     element = loops.get(i).get(j);
-                    for (int l=0;l<loops.get(k).size();l++){
+                    for (int l = 0; l < loops.get(k).size(); l++) {
                         if (loops.get(k).get(l).getName().equals(element.getName())) {
                             touching = true;
                             break;
@@ -174,9 +182,9 @@ public class LoopDetection {
                     currRes.add(new Vector<>());
                     currEdge.add(new Vector<>());
                     currRes.get(currRes.size() - 1).addAll(loops.get(i));
-                    loopTouch[0][currEdge.size()-1]="L"+String.valueOf(i+1);
+                    loopTouch[0][currEdge.size() - 1] = "L" + String.valueOf(i + 1);
                     currRes.get(currRes.size() - 1).addAll(loops.get(k));
-                    loopTouch[0][currEdge.size()-1]+="L"+String.valueOf(k+1);
+                    loopTouch[0][currEdge.size() - 1] += "L" + String.valueOf(k + 1);
                     currEdge.get(currEdge.size() - 1).addAll(getEdges(loops.get(i)));
                     currEdge.get(currEdge.size() - 1).addAll(getEdges(loops.get(k)));
                 }
@@ -185,7 +193,7 @@ public class LoopDetection {
         if (currRes.size() == 0) return;
         nonTouchingLoops.add(currRes);
         nonTouchingEdges.add(currEdge);
-        int f=1;
+        int f = 1;
         while (true) {
             currRes = new Vector<>();
             currEdge = new Vector<>();
@@ -195,7 +203,7 @@ public class LoopDetection {
                     boolean touching = false;
                     for (int j = 0; j < loops.get(i).size(); j++) {
                         element = loops.get(i).get(j);
-                        for (int l=0;l<prevNonTouchingLoops.get(k).size();l++){
+                        for (int l = 0; l < prevNonTouchingLoops.get(k).size(); l++) {
                             if (prevNonTouchingLoops.get(k).get(l).getName().equals(element.getName())) {
                                 touching = true;
                                 break;
@@ -206,9 +214,9 @@ public class LoopDetection {
                         currRes.add(new Vector<>());
                         currEdge.add(new Vector<>());
                         currRes.get(currRes.size() - 1).addAll(loops.get(i));
-                        loopTouch[f][currEdge.size()-1]="L"+String.valueOf(i+1);
+                        loopTouch[f][currEdge.size() - 1] = "L" + String.valueOf(i + 1);
                         currRes.get(currRes.size() - 1).addAll(prevNonTouchingLoops.get(k));
-                        loopTouch[f][currEdge.size()-1]+=loopTouch[f-1][k];
+                        loopTouch[f][currEdge.size() - 1] += loopTouch[f - 1][k];
                         currEdge.get(currEdge.size() - 1).addAll(getEdges(prevNonTouchingLoops.get(k)));
                         currEdge.get(currEdge.size() - 1).addAll(getEdges(loops.get(i)));
 
@@ -224,6 +232,7 @@ public class LoopDetection {
     public Vector<Vector<Vector<Vertex>>> getNonTouchingLoops() {
         return nonTouchingLoops;
     }
+
     public Vector<Vector<Vector<Edge>>> getNonTouchingEdges() {
         return nonTouchingEdges;
     }
@@ -232,6 +241,18 @@ public class LoopDetection {
         loopsEdges = new Vector<>();
         for (Vector<Vertex> i : loops) {
             loopsEdges.add(getEdges(i));
+        }
+    }
+
+    private void fillDeltaI() {
+        char delta = '\u0394';
+        TransferFunction tf = new TransferFunction();
+        double deltaTotal = tf.deltaTotal(loopsGain, nonTouchingGains);
+        deltaIString += delta + " = " + deltaTotal + "\n";
+        int counter = 1;
+        for (Double i : deltaI) {
+            deltaIString += delta + "" + counter + " = " + i + "\n";
+            counter++;
         }
     }
 

@@ -6,14 +6,16 @@ import java.util.Vector;
 public class GraphFlow {
     private LinkedList<Edge>[] Graphlist;
     private Vertex[] vertices;
-    public LinkedList<LinkedList<Edge>> forwardPaths = new LinkedList<LinkedList<Edge>>();
+    public LinkedList<LinkedList<Edge>> forwardPaths = new LinkedList<>();
     private LinkedList<Edge> forwardPath = new LinkedList<Edge>();
+    private String forwardPathsOutput;
     private boolean[] visited = new boolean[1000];
     public long[] gain = new long[1000];//contains the gain of every path "bltarteeb" :)
 
     public GraphFlow(int vertices) {
         Graphlist = new LinkedList[vertices];
         this.vertices = new Vertex[vertices];
+        forwardPathsOutput = "";
         addVertex();
     }
 
@@ -66,31 +68,35 @@ public class GraphFlow {
         LinkedList<Edge> v1 = Graphlist[0];//Always start from the input node.
 
         visited[0] = true;//input node can't be revisited!!
-       // System.out.print("hhhhhhh");
+        // System.out.print("hhhhhhh");
         for (int i = 0; i < v1.size(); i++) {
             findForwardPaths(v1.get(i));
-          //  System.out.print(v1.get(i).getDestination().getName()+"kkkkkk");
+            //  System.out.print(v1.get(i).getDestination().getName()+"kkkkkk");
             forwardPath.clear();
         }
 
         return forwardPaths;
     }
 
+    public String getForwardPathsOutput() {
+        printPaths();
+        return forwardPathsOutput;
+    }
 
     public void printPaths() {
         for (int i = 0; i < forwardPaths.size(); i++) {
             LinkedList<Edge> forPaths = forwardPaths.get(i);
             int gain = 1;
-            System.out.print("M" + (i + 1) + " = " + forPaths.get(0).getSource().getName() + " ");
+            forwardPathsOutput += "M" + (i + 1) + " = " + forPaths.get(0).getSource().getName() + " ";
             for (int j = 0; j < forPaths.size(); j++) {
-                System.out.print("--> ");
+                forwardPathsOutput += "--> ";
                 gain *= forPaths.get(j).getWeight();
-                System.out.print(forPaths.get(j).getDestination().getName() + " ");
+                forwardPathsOutput += forPaths.get(j).getDestination().getName() + " ";
             }
             this.gain[i] = gain;
-            System.out.print("= " + gain);
-            System.out.println();
+            forwardPathsOutput += "= " + gain + "\n";
         }
+
     }
 
 
