@@ -15,10 +15,10 @@ public class LoopDetection {
     private Vector<Vector<Edge>> loopsEdges;
     private Vector<Vector<Vector<Vertex>>> nonTouchingLoops;
     private Vector<Vector<Vector<Edge>>> nonTouchingEdges;
-    private Vector<Vector<Double>> nonTouchingGains;
-    private Vector<Double> loopsGain;
+    public Vector<Vector<Double>> nonTouchingGains;
+    public Vector<Double> loopsGain;
     private Vector<Double> deltaI;
-
+    public String[][] loopTouch=new String[1000][1000];
 
     public LoopDetection(GraphFlow graph) {
         this.graph = graph;
@@ -134,6 +134,7 @@ public class LoopDetection {
         Vertex element;
         Vector<Vector<Vertex>> currRes = new Vector<>();
         Vector<Vector<Edge>> currEdge = new Vector<>();
+
         for (int i = 0; i < loops.size() - 1; i++) {
             for (int k = i + 1; k < loops.size(); k++) {
                 boolean touching = false;
@@ -151,7 +152,9 @@ public class LoopDetection {
                     currRes.add(new Vector<>());
                     currEdge.add(new Vector<>());
                     currRes.get(currRes.size() - 1).addAll(loops.get(i));
+                    loopTouch[0][currEdge.size()-1]="L"+String.valueOf(i+1);
                     currRes.get(currRes.size() - 1).addAll(loops.get(k));
+                    loopTouch[0][currEdge.size()-1]+="L"+String.valueOf(k+1);
                     currEdge.get(currEdge.size() - 1).addAll(getEdges(loops.get(i)));
                     currEdge.get(currEdge.size() - 1).addAll(getEdges(loops.get(k)));
                 }
@@ -160,7 +163,7 @@ public class LoopDetection {
         if (currRes.size() == 0) return;
         nonTouchingLoops.add(currRes);
         nonTouchingEdges.add(currEdge);
-
+        int f=1;
         while (true) {
             currRes = new Vector<>();
             currEdge = new Vector<>();
@@ -181,7 +184,9 @@ public class LoopDetection {
                         currRes.add(new Vector<>());
                         currEdge.add(new Vector<>());
                         currRes.get(currRes.size() - 1).addAll(loops.get(i));
+                        loopTouch[f][currEdge.size()-1]="L"+String.valueOf(i+1);
                         currRes.get(currRes.size() - 1).addAll(prevNonTouchingLoops.get(k));
+                        loopTouch[f][currEdge.size()-1]+=loopTouch[f-1][k];
                         currEdge.get(currEdge.size() - 1).addAll(getEdges(prevNonTouchingLoops.get(k)));
                         currEdge.get(currEdge.size() - 1).addAll(getEdges(loops.get(i)));
 
@@ -197,7 +202,9 @@ public class LoopDetection {
     public Vector<Vector<Vector<Vertex>>> getNonTouchingLoops() {
         return nonTouchingLoops;
     }
-
+    public Vector<Vector<Vector<Edge>>> getNonTouchingEdges() {
+        return nonTouchingEdges;
+    }
 
     private void generateLoopsEdges() {
         loopsEdges = new Vector<>();

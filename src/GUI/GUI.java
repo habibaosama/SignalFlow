@@ -320,23 +320,20 @@ public class GUI extends JFrame {
         loops = loopDetection.getLoops();
 
         Vector<Vector<Vector<Vertex>>> nonTouchingLoops = loopDetection.getNonTouchingLoops();
+        Vector<Vector<Vector<Edge>>> nonTouchingEdges = loopDetection.getNonTouchingEdges();
         for (int i = 0; i < loops.size(); i++) {
+            System.out.print("L"+(i+1)+" = ");
             for (int j = 0; j < loops.get(i).size(); j++) {
                 System.out.print(loops.get(i).get(j).getSource().getName() +" --> ");
-                if(j== loops.get(i).size()-1) System.out.println(loops.get(i).get(j).getDestination().getName() +" ");
+                if(j== loops.get(i).size()-1) System.out.println(loops.get(i).get(j).getDestination().getName() +" = "+loopDetection.loopsGain.get(i));
             }
         }
 
-        for (int i = 0; i < nonTouchingLoops.size(); i++) {
+        int n=0;
+        for (int i = 0; i < nonTouchingEdges.size(); i++) {
             System.out.println((i + 2) + " nonTouchingLoops: ");
-            for (int j = 0; j < nonTouchingLoops.get(i).size(); j++) {
-                for (int k = 0; k < nonTouchingLoops.get(i).get(j).size(); k++) {
-                    if(k!= nonTouchingLoops.get(i).get(j).size()-1) {
-                        System.out.print(nonTouchingLoops.get(i).get(j).get(k).getName() + " --> ");
-                    }else{
-                        System.out.print(nonTouchingLoops.get(i).get(j).get(k).getName() +"\n");
-                    }
-                }
+            for (int j = 0; j < nonTouchingEdges.get(i).size(); j++) {
+               System.out.println(loopDetection.loopTouch[i][j]+" = "+loopDetection.nonTouchingGains.get(i).get(j));
             }
         }
         System.out.println("done");
