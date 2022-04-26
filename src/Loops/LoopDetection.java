@@ -54,18 +54,40 @@ public class LoopDetection {
         return true;
     }
 
-    public void generateDeltaI() {
+    private void generateDeltaI() {
+        computeDeltaIWithNonTouching();
+        computeDeltaIWithLoops();
+
+    }
+
+    private void computeDeltaIWithNonTouching() {
         LinkedList<LinkedList<Edge>> forwardPaths = graph.forwardPaths;
         for (int i = 0; i < forwardPaths.size(); i++) {
             double sum = 0;
             for (int j = 0; j < nonTouchingLoops.size(); j++) {
                 for (int k = 0; k < nonTouchingLoops.get(j).size(); k++) {
                     if (compareLoopAndPath(nonTouchingLoops.get(j).get(k), forwardPaths.get(i))) {
-                        sum += Math.pow(-1, j+1) * nonTouchingGains.get(j).get(k);
+                        sum += Math.pow(-1, j) * nonTouchingGains.get(j).get(k);
                     }
                 }
             }
             deltaI.add(1 + sum);
+        }
+    }
+
+    private void computeDeltaIWithLoops() {
+        LinkedList<LinkedList<Edge>> forwardPaths = graph.forwardPaths;
+        for (int i = 0; i < forwardPaths.size(); i++) {
+            double sum = 0;
+            for (int j = 0; j < loops.size(); j++) {
+                if (compareLoopAndPath(loops.get(j), forwardPaths.get(i))) {
+                    sum += loopsGain.get(j);
+                }
+            }
+            double temp = deltaI.get(i);
+            temp -= sum;
+            deltaI.set(i, temp);
+
         }
     }
 
