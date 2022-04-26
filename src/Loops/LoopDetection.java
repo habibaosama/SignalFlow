@@ -17,7 +17,7 @@ public class LoopDetection {
     private Vector<Vector<Vector<Edge>>> nonTouchingEdges;
     public Vector<Vector<Double>> nonTouchingGains;
     public Vector<Double> loopsGain;
-    private Vector<Double> deltaI;
+    public Vector<Double> deltaI;
     public String[][] loopTouch=new String[1000][1000];
 
     public LoopDetection(GraphFlow graph) {

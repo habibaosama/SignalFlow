@@ -2,6 +2,7 @@ package GUI;
 
 import Calculations.Edge;
 import Calculations.GraphFlow;
+import Calculations.TransferFunction;
 import Calculations.Vertex;
 import Loops.LoopDetection;
 import com.mxgraph.model.mxGeometry;
@@ -33,6 +34,7 @@ public class GUI extends JFrame {
     //ely 7nrsm 3liha
     JPanel panel;
     GraphFlow finalGraph;
+    TransferFunction tf = new TransferFunction();
     public static final Color GREY = new Color(204, 204, 204);
     public static final Color c = new Color(255, 163, 26);
     public static final Color c2 = new Color(153, 204, 255);
@@ -336,6 +338,9 @@ public class GUI extends JFrame {
                System.out.println(loopDetection.loopTouch[i][j]+" = "+loopDetection.nonTouchingGains.get(i).get(j));
             }
         }
+        Double res=tf.deltaTotal(loopDetection.loopsGain,loopDetection.nonTouchingGains);
+        tf.TransFunction(res,loopDetection.deltaI,finalGraph.gain);
+
         System.out.println("done");
 
         this.display.setText(this.output);
