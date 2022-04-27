@@ -51,7 +51,7 @@ public class LoopDetection {
     private boolean compareLoopAndPath(Vector<Vertex> loop, LinkedList<Edge> path) {
         for (Vertex i : loop) {
             for (Edge j : path) {
-                if (j.getDestination() == i || j.getSource() == i) return false;
+                if (j.getDestination().getId() == i.getId() || j.getSource().getId() == i.getId()) return false;
             }
         }
         return true;
@@ -132,7 +132,7 @@ public class LoopDetection {
             if (!visited[newId]) {
                 visited[newId] = true;
                 dfs(i.getDestination(), stage + 1);
-            } else if (this.stage[i.getDestination().getId()] < this.stage[source.getId()]) {
+            } else if (this.stage[i.getDestination().getId()] <= this.stage[source.getId()]) {
                 Loop loop = new Loop(i.getDestination(), source, graph);
                 loops.addAll(loop.getLoops());
             }
