@@ -313,7 +313,7 @@ public class GUI extends JFrame {
                 Vertex destinationNode = new Vertex(index, destination);
                 if (destination.equals(outputNode.getText()))
                     destinationNode.setOutput(true);
-                this.output += "source-" + sourceNode.getName() + "dest: " + destinationNode.getName() + " weight: " + Integer.valueOf((String) graph.getModel().getValue(edges[j])) + "\n";
+                //this.output += "source-" + sourceNode.getName() + "dest: " + destinationNode.getName() + " weight: " + Integer.valueOf((String) graph.getModel().getValue(edges[j])) + "\n";
                 finalGraph.addEgde(sourceNode, destinationNode, Integer.valueOf((String) graph.getModel().getValue(edges[j])));
 
             }
