@@ -119,19 +119,6 @@ public class GUI extends JFrame {
             }
         });
 
-        //FOR REMOVING THE WHOLE GRAPH
-        JButton clearBtn = new JButton("Clear");
-        clearBtn.setBounds(230, 105, 100, 40);
-        clearBtn.setBackground(c);
-        clearBtn.setForeground(Color.black);
-        clearBtn.setFont(boldFont);
-        clearBtn.setBorder(BorderFactory.createEmptyBorder());
-        clearBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clear();
-            }
-        });
-
         //FOR STARTING CALCULATION
         JButton startBtn = new JButton("Calculate");
         startBtn.setBounds(40, 250, 100, 40);
@@ -143,10 +130,27 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (checkEdgesValue() && isRedundantNode() && textExists()) {
                     startCalculation();
+                    startBtn.setEnabled(false);
                     //finalGraph.debugGraph();
                 }
             }
         });
+
+        //FOR REMOVING THE WHOLE GRAPH
+        JButton clearBtn = new JButton("Clear");
+        clearBtn.setBounds(230, 105, 100, 40);
+        clearBtn.setBackground(c);
+        clearBtn.setForeground(Color.black);
+        clearBtn.setFont(boldFont);
+        clearBtn.setBorder(BorderFactory.createEmptyBorder());
+        clearBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                clear();
+                startBtn.setEnabled(true);
+            }
+        });
+
+
         ///////////////////////////////////////////EXit//////////////////////////////////////
         boldFont = new Font("SansSerif", Font.BOLD, 14);
 
@@ -249,6 +253,7 @@ public class GUI extends JFrame {
         graph.getModel().beginUpdate();
         graph.getModel().endUpdate();
         output = "";
+        this.display.setText(this.output);
         addvertex();
     }
 
