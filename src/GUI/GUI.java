@@ -330,7 +330,7 @@ public class GUI extends JFrame {
         Vector<Vector<Edge>> loops;
         LoopDetection loopDetection = new LoopDetection(finalGraph);
         loops = loopDetection.getLoops();
-        this.output += loopDetection.getDeltaIString();
+        //this.output += loopDetection.getDeltaIString();
         Vector<Vector<Vector<Edge>>> nonTouchingEdges = loopDetection.getNonTouchingEdges();
         for (int i = 0; i < loops.size(); i++) {
             this.output += "L" + (i + 1) + " = ";
@@ -348,6 +348,7 @@ public class GUI extends JFrame {
                 this.output += loopDetection.loopTouch[i][j] + " = " + loopDetection.nonTouchingGains.get(i).get(j) + "\n";
             }
         }
+        this.output += loopDetection.getDeltaIString();
         Double res = tf.deltaTotal(loopDetection.loopsGain, loopDetection.nonTouchingGains);
         this.output += "The Transfer Function = " + tf.TransFunction(res, loopDetection.deltaI, finalGraph.gain) + "\n";
         System.out.println("done");
