@@ -5,6 +5,7 @@ import Calculations.GraphFlow;
 import Calculations.TransferFunction;
 import Calculations.Vertex;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Vector;
 
@@ -30,6 +31,7 @@ public class LoopDetection {
         this.loopsGain = new Vector<>();
         this.deltaI = new Vector<>();
         this.stage = new int[graph.getGraphlist().length];
+        Arrays.fill(stage,Integer.MAX_VALUE);
         this.deltaIString = "";
     }
 
@@ -57,15 +59,16 @@ public class LoopDetection {
         return true;
     }
 
+    public String getDeltaIString() {
+        return deltaIString;
+    }
+
     private void generateDeltaI() {
         computeDeltaIWithNonTouching();
         computeDeltaIWithLoops();
         fillDeltaI();
     }
 
-    public String getDeltaIString() {
-        return deltaIString;
-    }
 
     private void computeDeltaIWithNonTouching() {
         LinkedList<LinkedList<Edge>> forwardPaths = graph.forwardPaths;
@@ -123,6 +126,20 @@ public class LoopDetection {
         return res;
     }
 
+    private Vector<Vector<Vertex>> checkLoops(Vector<Vector<Vertex>> loops) {
+        int i = 0;
+        while (i < loops.size() && i >= 0) {
+            for (int j = 1; i>=0 && j < loops.get(i).size(); j++) {
+                if (stage[loops.get(i).get(j).getId()] < stage[loops.get(i).get(0).getId()]) {
+                    loops.remove(i);
+                    i--;
+                }
+            }
+            i++;
+        }
+        return loops;
+    }
+
     private void dfs(Vertex source, int stage) {
         int newId;
         this.stage[source.getId()] = stage + 1;
@@ -132,9 +149,9 @@ public class LoopDetection {
             if (!visited[newId]) {
                 visited[newId] = true;
                 dfs(i.getDestination(), stage + 1);
-            } else if (this.stage[i.getDestination().getId()] <= this.stage[source.getId()]) {
+            } else  {
                 Loop loop = new Loop(i.getDestination(), source, graph);
-                loops.addAll(loop.getLoops());
+                if (checkLoops(loop.getLoops()).size() > 0) loops.addAll(loop.getLoops());
             }
         }
     }

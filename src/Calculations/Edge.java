@@ -5,7 +5,7 @@ import java.util.UUID;
 public class Edge {
     private Vertex source;
     private Vertex destination;
-    private int weight;
+    private double weight;
 
     public Edge(Vertex source, Vertex destination, int weight) {
         this.source = source;
@@ -13,7 +13,7 @@ public class Edge {
         this.weight = weight;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
