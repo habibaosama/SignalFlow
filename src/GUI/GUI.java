@@ -193,14 +193,14 @@ public class GUI extends JFrame {
         //as it is the results can't edit in this area
         display.setEditable(false); // set textArea non-editable
         //display.setBackground(new Color(176, 175, 179 ));
-        display.setBackground(Color.black);
+        display.setBackground(Color.WHITE);
         boldFont = new Font("SansSerif", Font.BOLD, 17);
-        display.setForeground(c3);
+        display.setForeground(Color.BLACK);
         display.setFont(boldFont);
         display.setBorder(new EmptyBorder(50, 20, 0, 0));//top,left,bottom,right
         JScrollPane scroll = new JScrollPane(display);
-        scroll.setBounds(20, 350, 300, 1000);
-        scroll.setSize(300, 1000);
+        scroll.setBounds(20, 350, 300, 500);
+        scroll.setSize(400, 500);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         /////////////////////////////////////////////////////////////////////////
@@ -238,7 +238,7 @@ public class GUI extends JFrame {
     }
 
     public void addvertex() {
-        Object v = graph.insertVertex(graph.getDefaultParent(), null, "Name", -100, -100, 55, 55);
+        Object v = graph.insertVertex(graph.getDefaultParent(), null, "Name", 30, 30, 55, 55);
         mxICell ver = (mxICell) v;
         setVertexStyle(ver, "#33ccff");
         resetGraph();

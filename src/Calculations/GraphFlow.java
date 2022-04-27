@@ -61,7 +61,7 @@ public class GraphFlow {
         visited[edge.getDestination().id] = false;//3shan mmkn azor l node dy tany bs mn path mo5tlf.
 
     }
-
+/////////////////////////////ForwardPaths/////////////////////////////////////////////
 
     public LinkedList<LinkedList<Edge>> findForwardPaths() {
 
